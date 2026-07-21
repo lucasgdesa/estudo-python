@@ -1,11 +1,10 @@
-# estudo-python
-# 🐍 Estudos de Python
+# Estudos de Python
 
-Repositório criado para documentar minha jornada de aprendizado em Python — do zero até (espero!) conseguir uma vaga na área. Aqui você vai encontrar anotações, exercícios e projetos práticos organizados por tema.
+Repositório criado para documentar minha jornada de aprendizado em Python.
 
-## 🎯 Objetivo
+## Objetivo
 
-Estou estudando Python com foco em [ex: desenvolvimento web / ciência de dados / automação — ajuste aqui]. Este repositório serve tanto para fixar meu aprendizado quanto para construir um portfólio público.
+Estou estudando Python com foco em desenvolvimento web. Este repositório serve tanto para fixar meu aprendizado quanto para construir um portfólio público.
 
 ## 🗂️ Estrutura
 
@@ -23,11 +22,7 @@ Cada pasta tem seu próprio README explicando o que foi estudado e, quando aplic
 
 ## 📅 Progresso
 
-| Data | Tópico | Status |
-|------|--------|--------|
-| 2026-07 | Fundamentos de Python | 🔄 Em andamento |
 
-*(Vou atualizar essa tabela conforme avanço)*
 
 ## 🚀 Como rodar os projetos
 
