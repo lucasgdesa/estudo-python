@@ -18,17 +18,11 @@ estudos-python/
 └── 06-projetos/             # Projetos práticos maiores
 ```
 
-Cada pasta tem seu próprio README explicando o que foi estudado e, quando aplicável, como rodar o código.
-
-## 📅 Progresso
-
-
-
 ## 🚀 Como rodar os projetos
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/estudos-python.git
+git clone https://github.com/lucasgdesa/estudo-python.git
 
 # Entre na pasta do projeto desejado
 cd estudos-python/06-projetos/nome-do-projeto
@@ -44,8 +38,8 @@ python nome_do_arquivo.py
 
 Sinta-se à vontade para abrir uma *issue* com sugestões ou feedback!
 
-- LinkedIn: [seu link aqui]
-- Portfólio: [seu link aqui]
+- LinkedIn: https://www.linkedin.com/in/lucasgdesa-dev/
+- Portfólio: https://github.com/lucasgdesa
 
 ---
 *Este repositório é atualizado regularmente conforme avanço nos estudos.*
