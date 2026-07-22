@@ -1,0 +1,32 @@
+{# configurar_loja.html = mostrada quando carregar_loja() devolve None, ou seja,
+   ainda não existe loja.json — primeiro acesso ao sistema (console ou web).
+   Usada tanto por dashboard() quanto por painel() em app.py. #}
+{% extends "base.html" %}
+{% block titulo %}Configurar loja{% endblock %}
+{% block conteudo %}
+    <div class="card">
+        <h1>🍪 Bem-vindo!</h1>
+        <p>Vamos configurar sua loja pela primeira vez.</p>
+
+        {# Envia pra rota /loja/criar (função criar_loja() em app.py), que monta um
+           Restaurante novo com esses dados e salva no loja.json. #}
+        <form method="post" action="{{ url_for('criar_loja') }}">
+            <label>Nome da loja</label>
+            <input type="text" name="nome" required>
+
+            <label>Instagram (opcional)</label>
+            <input type="text" name="instagram">
+
+            <label>WhatsApp (opcional)</label>
+            <input type="text" name="whatsapp">
+
+            <label>Endereço (opcional)</label>
+            <input type="text" name="endereco">
+
+            <label>Horário de funcionamento (opcional)</label>
+            <input type="text" name="horario" placeholder="Ex: Terça a sábado - 12h às 19h">
+
+            <button type="submit">Criar loja</button>
+        </form>
+    </div>
+{% endblock %}

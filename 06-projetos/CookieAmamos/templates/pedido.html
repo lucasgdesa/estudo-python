@@ -1,0 +1,12 @@
+{# pedido.html = rota "/pedido" (função novo_pedido() em app.py).
+   O conteúdo que realmente muda (carrinho + formulário) foi separado em
+   _pedido_conteudo.html porque esse pedaço também é reenviado sozinho pelo HTMX
+   (sem essa página inteira em volta) quando um item é adicionado. #}
+{% extends "base.html" %}
+{% block titulo %}Fazer pedido{% endblock %}
+{% block conteudo %}
+    <h1>Fazer pedido</h1>
+    {# {% include %} cola o conteúdo do outro arquivo aqui, reaproveitando as mesmas
+       variáveis (restaurante, carrinho, total) que essa página recebeu. #}
+    {% include "_pedido_conteudo.html" %}
+{% endblock %}

@@ -1,0 +1,205 @@
+[
+  {
+    "data_hora": "12/07/2026 19:54",
+    "itens": [
+      {
+        "nome_prato": "Cookie de Kinder",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      }
+    ],
+    "endereco_cliente": "",
+    "frete": 0.0,
+    "distancia_km": 0.0
+  },
+  {
+    "data_hora": "12/07/2026 19:55",
+    "itens": [
+      {
+        "nome_prato": "Cookie Tradicional",
+        "preco_unitario": 12.0,
+        "quantidade": 3
+      },
+      {
+        "nome_prato": "Cookie de Kinder",
+        "preco_unitario": 14.0,
+        "quantidade": 4
+      }
+    ],
+    "endereco_cliente": "",
+    "frete": 0.0,
+    "distancia_km": 0.0
+  },
+  {
+    "data_hora": "12/07/2026 20:07",
+    "itens": [
+      {
+        "nome_prato": "Cookie de Kinder",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      }
+    ],
+    "endereco_cliente": "",
+    "frete": 0.0,
+    "distancia_km": 0.0
+  },
+  {
+    "data_hora": "12/07/2026 20:15",
+    "itens": [
+      {
+        "nome_prato": "Doce de Leite",
+        "preco_unitario": 14.0,
+        "quantidade": 1
+      },
+      {
+        "nome_prato": "Kinder Bueno",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      },
+      {
+        "nome_prato": "Oreo com Chocolate Branco",
+        "preco_unitario": 14.0,
+        "quantidade": 1
+      }
+    ],
+    "endereco_cliente": "",
+    "frete": 0.0,
+    "distancia_km": 0.0
+  },
+  {
+    "data_hora": "12/07/2026 21:05",
+    "itens": [
+      {
+        "nome_prato": "Kinder Bueno",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      }
+    ],
+    "endereco_cliente": "",
+    "frete": 0.0,
+    "distancia_km": 0.0
+  },
+  {
+    "data_hora": "12/07/2026 21:05",
+    "itens": [
+      {
+        "nome_prato": "Triplo Chocolate",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      },
+      {
+        "nome_prato": "Nutella",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      },
+      {
+        "nome_prato": "Kinder Bueno",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      }
+    ],
+    "endereco_cliente": "",
+    "frete": 0.0,
+    "distancia_km": 0.0
+  },
+  {
+    "data_hora": "15/07/2026 11:57",
+    "itens": [
+      {
+        "nome_prato": "Nutella",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      },
+      {
+        "nome_prato": "Kinder Bueno",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      }
+    ],
+    "endereco_cliente": "",
+    "frete": 0.0,
+    "distancia_km": 0.0
+  },
+  {
+    "data_hora": "15/07/2026 12:43",
+    "itens": [
+      {
+        "nome_prato": "Kinder Bueno",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      },
+      {
+        "nome_prato": "Nutella",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      }
+    ],
+    "endereco_cliente": "Rua gavião peixoto 190",
+    "frete": 12.0,
+    "distancia_km": 9.1069
+  },
+  {
+    "data_hora": "15/07/2026 13:44",
+    "itens": [
+      {
+        "nome_prato": "Doce de Leite",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      },
+      {
+        "nome_prato": "Nutella",
+        "preco_unitario": 14.0,
+        "quantidade": 1
+      },
+      {
+        "nome_prato": "Kinder Bueno",
+        "preco_unitario": 14.0,
+        "quantidade": 1
+      }
+    ],
+    "endereco_cliente": "rua doutor sardinha 221",
+    "frete": 9.0,
+    "distancia_km": 8.6234
+  },
+  {
+    "data_hora": "15/07/2026 14:12",
+    "itens": [
+      {
+        "nome_prato": "Nutella",
+        "preco_unitario": 14.0,
+        "quantidade": 1
+      },
+      {
+        "nome_prato": "Tradicional",
+        "preco_unitario": 12.0,
+        "quantidade": 2
+      }
+    ],
+    "endereco_cliente": "Rua Voluntários da Pátria 190, Niterói",
+    "frete": 7.0,
+    "distancia_km": 3.7106
+  },
+  {
+    "data_hora": "17/07/2026 11:34",
+    "itens": [
+      {
+        "nome_prato": "Black Nutella",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      },
+      {
+        "nome_prato": "Kinder Bueno",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      },
+      {
+        "nome_prato": "Triplo Chocolate",
+        "preco_unitario": 14.0,
+        "quantidade": 2
+      }
+    ],
+    "endereco_cliente": "Rua dr tabajara de araujo gama 20",
+    "frete": 3.78166,
+    "distancia_km": 3.7106
+  }
+]

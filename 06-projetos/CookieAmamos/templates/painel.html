@@ -1,0 +1,51 @@
+{# painel.html = área ADMINISTRATIVA (rota "/painel" em app.py, função painel()).
+   Diferente da vitrine.html (pública), essa página é pra quem gerencia a loja:
+   abrir/fechar e editar os dados do perfil. #}
+{% extends "base.html" %}
+{% block titulo %}Painel - {{ restaurante.nome }}{% endblock %}
+{% block conteudo %}
+    {# ===== Card 1: status da loja + botão de abrir/fechar ===== #}
+    <div class="card">
+        <h1>{{ restaurante.nome }}</h1>
+        <p>
+            {% if restaurante.aberto %}
+                <span class="selo aberto">🍪 Aberta</span>
+            {% else %}
+                <span class="selo fechado">Fechada</span>
+            {% endif %}
+        </p>
+
+        {# Esse formulário só tem o botão — ao enviar, chama a rota /loja/alternar,
+           que inverte restaurante.aberto e redireciona de volta pra cá. #}
+        <form method="post" action="{{ url_for('alternar_abertura') }}">
+            <button type="submit">
+                {% if restaurante.aberto %}Fechar loja{% else %}Abrir loja{% endif %}
+            </button>
+        </form>
+    </div>
+
+    {# ===== Card 2: formulário de editar o perfil da loja ===== #}
+    <div class="card">
+        <h2>Perfil da loja</h2>
+        <form method="post" action="{{ url_for('editar_perfil') }}">
+            {# value="{{ restaurante.X }}" pré-preenche o campo com o valor atual —
+               o usuário só edita o que quiser mudar, sem precisar redigitar tudo. #}
+            <label>Nome</label>
+            <input type="text" name="nome" value="{{ restaurante.nome }}" required>
+
+            <label>Instagram</label>
+            <input type="text" name="instagram" value="{{ restaurante.instagram }}">
+
+            <label>WhatsApp</label>
+            <input type="text" name="whatsapp" value="{{ restaurante.whatsapp }}">
+
+            <label>Endereço</label>
+            <input type="text" name="endereco" value="{{ restaurante.endereco }}">
+
+            <label>Horário de funcionamento</label>
+            <input type="text" name="horario" value="{{ restaurante.horario }}" placeholder="Ex: Terça a sábado - 12h às 19h">
+
+            <button type="submit">Salvar perfil</button>
+        </form>
+    </div>
+{% endblock %}

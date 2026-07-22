@@ -1,0 +1,50 @@
+{
+  "nome": "CookieAmamos",
+  "instagram": "@cookieamamos",
+  "whatsapp": "+55(21) 99259-0213",
+  "endereco": "Rua José Chianeli 99",
+  "horario": "Quarta a Domingo - 12h às 19h",
+  "aberto": true,
+  "cardapio": [
+    {
+      "nome": "Tradicional",
+      "preco": 12.0,
+      "descricao": "Cookie Tradicional"
+    },
+    {
+      "nome": "Triplo Chocolate",
+      "preco": 14.0,
+      "descricao": ""
+    },
+    {
+      "nome": "Kinder Bueno",
+      "preco": 14.0,
+      "descricao": "Cookie com recheio de Kinder"
+    },
+    {
+      "nome": "Nutella",
+      "preco": 14.0,
+      "descricao": "Cookie com recheio de Nutella"
+    },
+    {
+      "nome": "Black Nutella",
+      "preco": 14.0,
+      "descricao": "Massa de chocolate e Recheio de Nutella"
+    },
+    {
+      "nome": "Doce de Leite",
+      "preco": 14.0,
+      "descricao": "Cookie com recheio de doce de leite"
+    },
+    {
+      "nome": "Oreo com Chocolate Branco",
+      "preco": 14.0,
+      "descricao": "Recheado com oreo e Chocolate branco"
+    },
+    {
+      "nome": "Marshmallow",
+      "preco": 14.0,
+      "descricao": "Cookie com recheio de Marshmallow"
+    }
+  ]
+}

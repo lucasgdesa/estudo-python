@@ -1,0 +1,88 @@
+{# vitrine.html = a página PÚBLICA (rota "/" em app.py, função dashboard()).
+   É o "site da loja" que qualquer visitante vê: banner, sabores, como pedir, rodapé.
+   As ações de administrar a loja (editar perfil, abrir/fechar) ficam em painel.html. #}
+{% extends "base.html" %}
+{% block titulo %}{{ restaurante.nome }}{% endblock %}
+{% block conteudo %}
+    {# ===== Hero: nome da loja + status + botão de pedido + foto de destaque ===== #}
+    <div class="hero">
+        <h1>{{ restaurante.nome }}</h1>
+        <p class="tagline">O melhor cookie da região! 🍪</p>
+        <p>
+            {% if restaurante.aberto %}
+                <span class="selo aberto">Aberta agora</span>
+            {% else %}
+                <span class="selo fechado">Fechada no momento</span>
+            {% endif %}
+        </p>
+        <a href="{{ url_for('novo_pedido') }}"><button type="button">Fazer pedido</button></a>
+
+        <img class="hero-foto" src="{{ url_for('static', filename='img/produtos/hero.jpg') }}" alt="Cookies da {{ restaurante.nome }}">
+    </div>
+
+    {# ===== Sabores em destaque: os 4 primeiros pratos do cardápio (definidos em app.py) ===== #}
+    {% if destaques %}
+    {# Lista de fotos que vamos ciclar pelos cards (é só ilustrativo, não é a foto exata de cada sabor). #}
+    {% set fotos = ['sabor-1.jpg', 'sabor-2.jpg', 'sabor-3.jpg', 'sabor-4.jpg'] %}
+    <div class="card">
+        <h2>Sabores em destaque</h2>
+        <div class="grid-destaques">
+            {% for prato in destaques %}
+            <div class="destaque-item">
+                {# loop.index0 = posição no loop começando em 0; o "%" (resto da divisão)
+                   faz ciclar pelas 4 fotos mesmo se houver mais ou menos de 4 pratos. #}
+                <img src="{{ url_for('static', filename='img/produtos/' + fotos[loop.index0 % fotos|length]) }}" alt="{{ prato.nome }}">
+                <div>{{ prato.nome }}</div>
+                <div class="preco">R$ {{ "%.2f"|format(prato.preco) }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {# ===== Como pedir: 3 passos fixos, só texto explicativo ===== #}
+    <div class="card">
+        <h2>Como pedir</h2>
+        <div class="como-pedir">
+            <div>
+                <div class="numero">1</div>
+                <div>Escolha os sabores no cardápio</div>
+            </div>
+            <div>
+                <div class="numero">2</div>
+                <div>Monte seu pedido</div>
+            </div>
+            <div>
+                <div class="numero">3</div>
+                <div>Combine a retirada com a loja</div>
+            </div>
+        </div>
+    </div>
+
+    {# ===== Rodapé: só mostra cada bloco se o dado existir (evita "Horário: " vazio) ===== #}
+    <footer class="rodape">
+        {% if restaurante.horario %}
+        <div class="info-linha">
+            {# "funcionamento" é um link disfarçado pra área do administrador —
+               parece texto normal (sem sublinhado, sem mudar de cor), mas é clicável.
+               Ver .link-oculto no base.html. #}
+            <h3>Horário de <a href="{{ url_for('entrar_admin') }}" class="link-oculto">funcionamento</a></h3>
+            {{ restaurante.horario }}
+        </div>
+        {% endif %}
+        {% if restaurante.endereco %}
+        <div class="info-linha">
+            <h3>Endereço</h3>
+            {{ restaurante.endereco }}
+        </div>
+        {% endif %}
+        <div class="info-linha">
+            <h3>Redes sociais</h3>
+            {# .lstrip('@') tira o @ do início do valor salvo (ex: "@cookieamamos" -> "cookieamamos")
+               pra montar o link certo do Instagram — é um método de string do Python, chamado direto aqui. #}
+            {% if restaurante.instagram %}<a href="https://instagram.com/{{ restaurante.instagram.lstrip('@') }}" target="_blank">Instagram</a>{% endif %}
+            {% if restaurante.instagram and restaurante.whatsapp %} · {% endif %}
+            {% if restaurante.whatsapp %}<span>WhatsApp: {{ restaurante.whatsapp }}</span>{% endif %}
+        </div>
+    </footer>
+{% endblock %}

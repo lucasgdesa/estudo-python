@@ -1,0 +1,105 @@
+{# _pedido_conteudo.html = a parte "dinâmica" da tela de pedido.
+   Nome começando com "_" é só uma convenção pra indicar "parcial/incluído por outro
+   template", não é uma regra do Flask.
+
+   Esse <div id="pedido-conteudo"> engloba TUDO abaixo, em qualquer um dos casos
+   (loja fechada / cardápio vazio / com carrinho / sem carrinho) — isso é importante
+   porque o HTMX troca esse elemento inteiro (hx-swap="outerHTML") pela resposta do
+   servidor, e a resposta também é sempre esse mesmo <div id="pedido-conteudo">. #}
+<div id="pedido-conteudo">
+    {# get_flashed_messages() devolve as mensagens guardadas com flash() em app.py
+       (ex: "não conseguimos calcular o frete"). Cada mensagem só aparece UMA vez —
+       depois de ser lida aqui, o Flask já não a devolve de novo. #}
+    {% for mensagem in get_flashed_messages() %}
+    <div class="card" style="border: 2px solid var(--vermelho);">
+        <p class="fechado">{{ mensagem }}</p>
+    </div>
+    {% endfor %}
+
+    {% if not restaurante.aberto %}
+        <div class="card">
+            <p class="fechado">A loja está fechada no momento. Não é possível fazer pedidos.</p>
+        </div>
+    {% elif not restaurante.cardapio %}
+        <div class="card">
+            <p>O cardápio está vazio, não há o que pedir.</p>
+        </div>
+    {% else %}
+        {# ===== Cardápio com contador (−/+) em cada prato ===== #}
+        <div class="card">
+            <h2>Cardápio</h2>
+            <div class="lista-pratos-pedido">
+                {% for prato in restaurante.cardapio %}
+                {# carrinho é o dicionário {nome_do_prato: quantidade}; .get(nome, 0)
+                   devolve 0 pra qualquer prato que ainda não foi adicionado. #}
+                {% set quantidade_atual = carrinho.get(prato.nome, 0) %}
+                <div class="prato-pedido">
+                    <div>
+                        <div>🍪 {{ prato.nome }}</div>
+                        <div class="preco">R$ {{ "%.2f"|format(prato.preco) }}</div>
+                    </div>
+                    <div class="stepper">
+                        <form method="post" action="{{ url_for('diminuir_quantidade', nome_prato=prato.nome) }}"
+                              hx-post="{{ url_for('diminuir_quantidade', nome_prato=prato.nome) }}"
+                              hx-target="#pedido-conteudo" hx-swap="outerHTML">
+                            <button type="submit" class="btn-stepper" {% if quantidade_atual == 0 %}disabled{% endif %}>−</button>
+                        </form>
+                        <span class="quantidade">{{ quantidade_atual }}</span>
+                        <form method="post" action="{{ url_for('aumentar_quantidade', nome_prato=prato.nome) }}"
+                              hx-post="{{ url_for('aumentar_quantidade', nome_prato=prato.nome) }}"
+                              hx-target="#pedido-conteudo" hx-swap="outerHTML">
+                            <button type="submit" class="btn-stepper">+</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {# Só mostra o resumo, o endereço e o total se já tiver algum item no carrinho. #}
+        {% if itens_carrinho %}
+            <div class="card">
+                <h2>Itens no pedido</h2>
+                <table>
+                    <tr><th>Prato</th><th>Qtd</th><th>Subtotal</th></tr>
+                    {% for item in itens_carrinho %}
+                    <tr>
+                        <td>🍪 {{ item.nome }}</td>
+                        <td>{{ item.quantidade }}</td>
+                        <td>R$ {{ "%.2f"|format(item.preco * item.quantidade) }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <p>Subtotal dos pratos: R$ {{ "%.2f"|format(subtotal) }}</p>
+            </div>
+
+            <div class="card">
+                <h2>Endereço de entrega</h2>
+                {% if endereco_cliente %}
+                    <p>📍 {{ endereco_cliente }}</p>
+                    <p>Distância até a loja: {{ "%.1f"|format(distancia_km) }} km — Frete: R$ {{ "%.2f"|format(frete) }}</p>
+                {% endif %}
+
+                <form method="post" action="{{ url_for('calcular_frete_pedido') }}"
+                      hx-post="{{ url_for('calcular_frete_pedido') }}" hx-target="#pedido-conteudo" hx-swap="outerHTML">
+                    <label>Endereço completo do cliente</label>
+                    <input type="text" name="endereco_cliente" value="{{ endereco_cliente }}" placeholder="Rua, número, bairro" required>
+                    <button type="submit">{% if endereco_cliente %}Recalcular frete{% else %}Calcular frete{% endif %}</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <p><strong>Total (pratos + frete): R$ {{ "%.2f"|format(total) }}</strong></p>
+
+                {# Esses dois botões continuam formulários NORMAIS (sem hx-post):
+                   eles devem mesmo navegar pra outra página (histórico ou pedido novo). #}
+                <form method="post" action="{{ url_for('finalizar_pedido') }}" style="display:inline">
+                    <button type="submit">Finalizar pedido</button>
+                </form>
+                <form method="post" action="{{ url_for('cancelar_pedido') }}" style="display:inline">
+                    <button type="submit" class="btn-secundario">Cancelar pedido</button>
+                </form>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>

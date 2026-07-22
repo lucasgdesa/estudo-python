@@ -1,0 +1,295 @@
+{# base.html = o "molde" de todas as páginas. Toda página (vitrine, painel, cardápio...)
+   começa com "extends base.html" e só preenche os blocos "titulo" e "conteudo".
+   Assim, cabeçalho, menu, fontes e CSS só existem escritos uma vez, aqui.
+
+   IMPORTANTE: este bloco de comentário usa a sintaxe própria de comentário do Jinja2,
+   não a sintaxe de comentário do HTML puro. Um comentário HTML normal não protege o
+   conteúdo de dentro do processamento do Jinja2 - qualquer marcação de template escrita
+   lá dentro ainda seria executada de verdade. Foi exatamente isso que causou um erro de
+   "RecursionError" aqui: um comentário HTML continha, solto no meio do texto, o comando
+   de herança de template escrito por extenso, e o Jinja2 executou aquilo como um segundo
+   "extends" de verdade, fazendo o arquivo estender ele mesmo infinitamente. #}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {# Cada página filha pode sobrescrever esse título; se não sobrescrever, usa esse padrão. #}
+    <title>{% block titulo %}CookieAmamos{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {# HTMX: biblioteca que permite trocar pedaços da página sem recarregar tudo,
+       lendo atributos hx-* no HTML (usado em pedido.html / _pedido_conteudo.html). #}
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        /* Paleta de cores da marca (inspirada na logo do Instagram) e sombra padrão,
+           tudo centralizado aqui em variáveis CSS pra ser fácil de ajustar depois. */
+        :root {
+            --roxo: #8c6fc9;
+            --roxo-escuro: #3d2c6b;
+            --roxo-claro: #efe8fb;
+            --creme: #fff9f2;
+            --marrom: #7a4a2b;
+            --branco: #ffffff;
+            --verde: #2f8f4e;
+            --vermelho: #c8394a;
+            --sombra: 0 4px 14px rgba(61, 44, 107, 0.15);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: "Quicksand", Arial, sans-serif;
+            background: var(--creme);
+            color: var(--roxo-escuro);
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 16px 48px;
+        }
+
+        h1, h2, h3 { font-family: "Baloo 2", "Quicksand", sans-serif; color: var(--roxo-escuro); }
+
+        /* Faixa roxa do topo, com a logo e o menu dentro dela. */
+        header.topo {
+            background: linear-gradient(135deg, var(--roxo), #a98fe0);
+            margin: 0 -16px 24px;
+            padding: 20px 16px 16px;
+            border-radius: 0 0 24px 24px;
+            box-shadow: var(--sombra);
+        }
+
+        .logo-linha { display: flex; align-items: center; gap: 12px; }
+        .logo-linha img { width: 52px; height: 52px; border-radius: 50%; box-shadow: var(--sombra); }
+
+        .marca {
+            font-family: "Baloo 2", sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--branco);
+        }
+
+        /* Menu de navegação, estilizado como "pílulas" translúcidas sobre o roxo.
+           "nav form button" é o botão "Sair" — mesmo visual dos links, mas precisa
+           ser um botão dentro de formulário (POST), não um link, porque sair muda
+           o estado da sessão (não é só "ir ver outra página"). */
+        nav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+        nav form { margin: 0; }
+        nav a, nav form button {
+            color: var(--branco);
+            text-decoration: none;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.18);
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            margin: 0;
+        }
+        nav a:hover, nav form button:hover { background: rgba(255, 255, 255, 0.32); }
+
+        /* .card = caixinha branca com sombra, usada pra organizar o conteúdo de cada página. */
+        .card {
+            background: var(--branco);
+            border-radius: 18px;
+            padding: 18px 20px;
+            box-shadow: var(--sombra);
+            margin-bottom: 20px;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th { text-align: left; padding: 8px; color: var(--roxo); font-family: "Baloo 2", sans-serif; }
+        td { text-align: left; padding: 8px; border-top: 1px solid var(--roxo-claro); }
+
+        /* Formulários e campos, com bordas arredondadas roxo-claras. */
+        form { margin-top: 16px; }
+        label { display: block; margin-top: 10px; font-weight: 600; font-size: 0.9rem; }
+        input, select {
+            padding: 9px 12px;
+            width: 100%;
+            max-width: 320px;
+            box-sizing: border-box;
+            border: 2px solid var(--roxo-claro);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            margin-top: 4px;
+        }
+        input:focus, select:focus { outline: none; border-color: var(--roxo); }
+
+        /* Botão principal: pílula roxa. */
+        button {
+            margin-top: 14px;
+            padding: 15px 30px;
+            cursor: pointer;
+            background: var(--roxo);
+            color: var(--branco);
+            border: none;
+            border-radius: 999px;
+            font-family: "Baloo 2", sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        button:hover { background: var(--roxo-escuro); }
+
+        /* Botão secundário (ex: "Remover", "Cancelar pedido") — contorno vermelho, menor. */
+        .btn-secundario {
+            background: var(--branco);
+            color: var(--vermelho);
+            border: 2px solid var(--vermelho);
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            margin-top: 0;
+        }
+        .btn-secundario:hover { background: var(--vermelho); color: var(--branco); }
+
+        /* Lista de pratos com contador (−/+) na tela de Fazer pedido. */
+        .lista-pratos-pedido { margin-top: 12px; }
+        .prato-pedido {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-top: 1px solid var(--roxo-claro);
+        }
+        .prato-pedido .preco { color: var(--roxo); font-weight: 700; font-size: 0.9rem; }
+
+        .stepper { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+        .stepper form { margin: 0; }
+        .stepper .btn-stepper {
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            margin: 0;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .stepper .btn-stepper:disabled { opacity: 0.35; cursor: default; }
+        .stepper .quantidade { min-width: 26px; text-align: center; font-weight: 700; font-size: 1.1rem; }
+
+        .aberto { color: var(--verde); font-weight: 700; }
+        .fechado { color: var(--vermelho); font-weight: 700; }
+
+        /* .selo = "badge"/etiqueta arredondada, usada pro status Aberta/Fechada. */
+        .selo {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .selo.aberto { background: #e3f5e8; }
+        .selo.fechado { background: #fbe6e9; }
+
+        /* Seção "hero" no topo da vitrine (nome da loja + status + botão de pedido). */
+        .hero { text-align: center; padding: 20px 12px 8px; }
+        .hero p.tagline { color: var(--marrom); font-weight: 600; margin-top: 4px; }
+
+        /* Grade de fotos de "Sabores em destaque" — se ajusta sozinha ao tamanho da tela. */
+        .grid-destaques {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 14px;
+            margin-top: 16px;
+        }
+        .destaque-item { background: var(--roxo-claro); border-radius: 14px; padding: 12px; text-align: center; overflow: hidden; }
+        /* object-fit: cover preenche a caixa sem distorcer a foto, cortando o excesso. */
+        .destaque-item img { width: 100%; height: 110px; object-fit: cover; border-radius: 10px; margin-bottom: 8px; }
+        .destaque-item .preco { color: var(--roxo); font-weight: 700; }
+
+        .hero-foto { width: 100%; max-width: 340px; border-radius: 20px; margin: 16px auto 0; display: block; box-shadow: var(--sombra); }
+
+        /* Seção "Como pedir" em 3 passos numerados. */
+        .como-pedir {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+            text-align: center;
+            margin-top: 12px;
+        }
+        .como-pedir .numero {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--roxo);
+            color: var(--branco);
+            border-radius: 50%;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        /* Rodapé roxo-escuro da vitrine, com horário/endereço/redes sociais. */
+        footer.rodape {
+            margin: 24px -16px -48px;
+            padding: 22px 20px 28px;
+            background: var(--roxo-escuro);
+            color: var(--branco);
+            border-radius: 24px 24px 0 0;
+        }
+        footer.rodape h3 { color: var(--branco); font-size: 0.95rem; margin: 0 0 4px; }
+        footer.rodape .info-linha { margin-bottom: 12px; font-size: 0.9rem; }
+        footer.rodape a { color: var(--branco); }
+
+        /* Link disfarçado (ver vitrine.html): mesma cor e sem sublinhado do texto ao
+           redor, então visualmente ninguém percebe que aquela palavra é clicável. */
+        .link-oculto { color: inherit; text-decoration: none; }
+
+        /* Caixa de destaque com o total vendido no dia selecionado. */
+        .total-do-dia {
+            background: var(--roxo-claro);
+            border-radius: 14px;
+            padding: 14px 18px;
+            font-family: "Baloo 2", sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Classes que o HTMX aplica sozinho durante a troca de conteúdo — só definindo
+           esse CSS já ganhamos uma transição suave de opacidade, sem escrever JavaScript. */
+        .htmx-swapping { opacity: 0; transition: opacity 0.15s ease-out; }
+        .htmx-settling { opacity: 0; }
+        .htmx-added { opacity: 1; transition: opacity 0.15s ease-in; }
+    </style>
+</head>
+<body>
+    {# Cabeçalho fixo: logo + nome da marca + menu. Aparece em toda página. #}
+    <header class="topo">
+        <div class="logo-linha">
+            <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo" onerror="this.style.display='none'">
+            <span class="marca">CookieAmamos</span>
+        </div>
+        <nav>
+            {# url_for('nome_da_funcao') gera a URL certa a partir do nome da função em app.py,
+               em vez de escrever "/painel" etc na mão — se a rota mudar, o link se atualiza sozinho.
+
+               "session" fica disponível automaticamente em qualquer template do Flask,
+               sem precisar passar ela explicitamente em cada render_template(). Por
+               isso dá pra checar session.admin aqui, direto no menu. #}
+            <a href="{{ url_for('dashboard') }}">Início</a>
+            <a href="{{ url_for('novo_pedido') }}">Fazer pedido</a>
+            {# Sem link "Entrar" visível de propósito — o acesso do administrador
+               agora só existe pela palavra "funcionamento" escondida no rodapé da
+               vitrine (ver vitrine.html e a classe .link-oculto). #}
+            {% if session.get('admin') %}
+                <a href="{{ url_for('ver_cardapio') }}">Cardápio</a>
+                <a href="{{ url_for('ver_pedidos') }}">Histórico</a>
+                <a href="{{ url_for('painel') }}">Painel</a>
+                <form method="post" action="{{ url_for('sair_admin') }}">
+                    <button type="submit">Sair</button>
+                </form>
+            {% endif %}
+        </nav>
+    </header>
+
+    {# Aqui entra o conteúdo específico de cada página (definido com {% block conteudo %}...{% endblock %}). #}
+    {% block conteudo %}{% endblock %}
+</body>
+</html>

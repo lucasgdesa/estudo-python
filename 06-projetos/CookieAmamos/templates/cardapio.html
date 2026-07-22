@@ -1,0 +1,49 @@
+{# cardapio.html = rota "/cardapio" em app.py. Lista os pratos, permite remover
+   (um botão por linha) e tem um formulário pra adicionar um prato novo. #}
+{% extends "base.html" %}
+{% block titulo %}Cardápio{% endblock %}
+{% block conteudo %}
+    {# ===== Card 1: tabela com os pratos já cadastrados ===== #}
+    <div class="card">
+        <h1>Cardápio - {{ restaurante.nome }}</h1>
+
+        {% if not restaurante.cardapio %}
+            <p>Nenhum prato cadastrado ainda.</p>
+        {% else %}
+            <table>
+                <tr><th>Prato</th><th>Preço</th><th>Descrição</th><th></th></tr>
+                {% for prato in restaurante.cardapio %}
+                <tr>
+                    <td>🍪 {{ prato.nome }}</td>
+                    <td>R$ {{ "%.2f"|format(prato.preco) }}</td>
+                    <td>{{ prato.descricao }}</td>
+                    <td>
+                        {# Cada linha tem seu próprio mini-formulário de remover, apontando
+                           pra rota /cardapio/remover/<nome_prato> com o nome desse prato. #}
+                        <form method="post" action="{{ url_for('remover_prato', nome_prato=prato.nome) }}">
+                            <button type="submit" class="btn-secundario">Remover</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+
+    {# ===== Card 2: formulário de adicionar prato novo ===== #}
+    <div class="card">
+        <h2>Adicionar prato</h2>
+        <form method="post" action="{{ url_for('adicionar_prato') }}">
+            <label>Nome</label>
+            <input type="text" name="nome" required>
+
+            <label>Preço</label>
+            <input type="number" step="0.01" name="preco" required>
+
+            <label>Descrição (opcional)</label>
+            <input type="text" name="descricao">
+
+            <button type="submit">Adicionar</button>
+        </form>
+    </div>
+{% endblock %}

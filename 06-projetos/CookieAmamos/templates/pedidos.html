@@ -1,0 +1,51 @@
+{# pedidos.html = rota "/pedidos" (função ver_pedidos() em app.py).
+   Tem um seletor de calendário pra escolher qualquer dia (não só os dias que tiveram
+   pedido). Se o dia escolhido não tiver nenhum pedido, mostra "Sem pedidos nesse dia". #}
+{% extends "base.html" %}
+{% block titulo %}Histórico de pedidos{% endblock %}
+{% block conteudo %}
+    <h1>Histórico de pedidos</h1>
+
+    <div class="card">
+        {# method="get" (não "post"): escolher uma data não muda nada no servidor, só
+           pede pra ver outra coisa — por isso os dados vão na própria URL (?data=...),
+           igual clicar num link. onchange="this.form.submit()" reenvia o formulário
+           sozinho assim que o usuário escolhe uma data no calendário, sem precisar de
+           um botão "Buscar" separado. #}
+        <form method="get" action="{{ url_for('ver_pedidos') }}">
+            <label>Escolha o dia</label>
+            <input type="date" name="data" value="{{ data_iso }}" onchange="this.form.submit()">
+        </form>
+    </div>
+
+    {% if not pedidos_do_dia %}
+        <div class="card">
+            <p>Sem pedidos nesse dia</p>
+        </div>
+    {% else %}
+        {# ===== Total vendido no dia selecionado (não é "lucro": não descontamos custo) ===== #}
+        <div class="total-do-dia">
+            Total vendido em {{ dia_selecionado }}: R$ {{ "%.2f"|format(total_do_dia) }}
+        </div>
+
+        {% for pedido in pedidos_do_dia %}
+            <div class="card">
+                <h3>{{ pedido.data_hora }}</h3>
+                <table>
+                    <tr><th>Prato</th><th>Qtd</th><th>Subtotal</th></tr>
+                    {% for item in pedido.itens %}
+                    <tr>
+                        <td>🍪 {{ item.nome_prato }}</td>
+                        <td>{{ item.quantidade }}</td>
+                        <td>R$ {{ "%.2f"|format(item.subtotal()) }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% if pedido.endereco_cliente %}
+                <p>📍 Entrega: {{ pedido.endereco_cliente }} ({{ "%.1f"|format(pedido.distancia_km) }} km — frete R$ {{ "%.2f"|format(pedido.frete) }})</p>
+                {% endif %}
+                <p><strong>Total: R$ {{ "%.2f"|format(pedido.total()) }}</strong></p>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

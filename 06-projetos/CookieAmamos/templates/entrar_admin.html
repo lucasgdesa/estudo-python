@@ -1,0 +1,21 @@
+{# entrar_admin.html = rota "/painel/entrar" (função entrar_admin() em app.py).
+   Tela de login da área de administrador. Qualquer rota protegida com @requer_admin
+   (ver app.py) redireciona pra cá se ninguém estiver logado ainda. #}
+{% extends "base.html" %}
+{% block titulo %}Entrar - Área do administrador{% endblock %}
+{% block conteudo %}
+    {% for mensagem in get_flashed_messages() %}
+    <div class="card" style="border: 2px solid var(--vermelho);">
+        <p class="fechado">{{ mensagem }}</p>
+    </div>
+    {% endfor %}
+
+    <div class="card">
+        <h1>Área do administrador</h1>
+        <form method="post" action="{{ url_for('entrar_admin') }}">
+            <label>Senha</label>
+            <input type="password" name="senha" required>
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
+{% endblock %}
